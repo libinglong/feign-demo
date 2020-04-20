@@ -6,10 +6,13 @@ import com.netflix.client.ClientFactory;
 import com.netflix.client.config.IClientConfig;
 import com.netflix.client.config.IClientConfigKey;
 import feign.Feign;
+import feign.Request;
 import feign.okhttp.OkHttpClient;
 import feign.ribbon.RibbonClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author binglongli217932
@@ -34,8 +37,10 @@ public class Config {
 
     @Bean
     public Baidu baidu() throws ClientException {
+        Request.Options options = new Request.Options(3000,TimeUnit.MILLISECONDS,3000,TimeUnit.MILLISECONDS,true);
         return Feign.builder()
                 .client(new OkHttpClient())
+                .options(options)
                 .target(Baidu.class, "http://www.baidu.com");
     }
 
